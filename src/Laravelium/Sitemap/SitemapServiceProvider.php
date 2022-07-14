@@ -11,10 +11,8 @@ class SitemapServiceProvider extends ServiceProvider implements DeferrableProvid
 {
     /**
      * Bootstrap the application events.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->loadViewsFrom(__DIR__.'/../../views', 'sitemap');
 
@@ -37,10 +35,8 @@ class SitemapServiceProvider extends ServiceProvider implements DeferrableProvid
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->app->bind('sitemap', function (Container $app) {
             $config = $app->make('config');
@@ -61,7 +57,7 @@ class SitemapServiceProvider extends ServiceProvider implements DeferrableProvid
     /**
      * {@inheritdoc}
      */
-    public function provides()
+    public function provides(): array
     {
         return ['sitemap', Sitemap::class];
     }

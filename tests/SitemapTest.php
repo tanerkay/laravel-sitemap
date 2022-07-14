@@ -1,6 +1,6 @@
 <?php
 
-namespace Laravelium\Sitemap\Test;
+namespace Laravelium\Tests;
 
 use Laravelium\Sitemap\Sitemap;
 use Orchestra\Testbench\TestCase;
@@ -8,30 +8,23 @@ use Laravelium\Sitemap\SitemapServiceProvider;
 
 class SitemapTest extends TestCase
 {
-    /**
-     * @var Sitemap
-     */
-    protected $sitemap;
-    /**
-     * @var SitemapServiceProvider
-     */
-    protected $sp;
-    /**
-     * @var array
-     */
-    protected $itemSeeder = [];
+    protected Sitemap $sitemap;
 
-    protected function getPackageProviders($app)
+    protected SitemapServiceProvider $sp;
+
+    protected array $itemSeeder = [];
+
+    protected function getPackageProviders($app): array
     {
         return [SitemapServiceProvider::class];
     }
 
-    protected function getPackageAliases($app)
+    protected function getPackageAliases($app): array
     {
         return ['Sitemap' => Sitemap::class];
     }
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -359,7 +352,7 @@ class SitemapTest extends TestCase
         $this->seedItems();
         $this->sitemap->model->resetItems($this->itemSeeder);
 
-        $this->assertCount(50001, $this->sitemap->model->getItems(), 'gsitemap', '/www/', 'css/style.css');
+        $this->assertCount(50001, $this->sitemap->model->getItems());
 
         $this->sitemap->model->setUseLimitSize(false);
 

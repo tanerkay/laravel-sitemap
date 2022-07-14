@@ -14,64 +14,41 @@ namespace Laravelium\Sitemap;
  * @license http://opensource.org/licenses/mit-license.php MIT License
  */
 
+use DateTime;
+use Illuminate\Contracts\View\View;
 use Illuminate\Filesystem\Filesystem as Filesystem;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactory;
+use Illuminate\Support\Carbon;
 
 class Sitemap
 {
-    /**
-     * Model instance.
-     *
-     * @var Model
-     */
-    public $model = null;
+    public Model $model;
 
-    /**
-     * CacheRepository instance.
-     *
-     * @var CacheRepository
-     */
-    public $cache = null;
+    public CacheRepository $cache;
 
-    /**
-     * ConfigRepository instance.
-     *
-     * @var ConfigRepository
-     */
-    protected $configRepository = null;
+    protected ConfigRepository $configRepository;
 
-    /**
-     * Filesystem instance.
-     *
-     * @var Filesystem
-     */
-    protected $file = null;
+    protected Filesystem $file;
 
-    /**
-     * ResponseFactory instance.
-     *
-     * @var ResponseFactory
-     */
-    protected $response = null;
+    protected ResponseFactory $response;
 
-    /**
-     * ViewFactory instance.
-     *
-     * @var ViewFactory
-     */
-    protected $view = null;
+    protected ViewFactory $view;
 
     /**
      * Using constructor we populate our model from configuration file
      * and loading dependencies.
-     *
-     * @param array $config
      */
-    public function __construct(array $config, CacheRepository $cache, ConfigRepository $configRepository, Filesystem $file, ResponseFactory $response, ViewFactory $view)
-    {
+    public function __construct(
+        array $config,
+        CacheRepository $cache,
+        ConfigRepository $configRepository,
+        Filesystem $file,
+        ResponseFactory $response,
+        ViewFactory $view
+    ) {
         $this->cache = $cache;
         $this->configRepository = $configRepository;
         $this->file = $file;
@@ -85,10 +62,10 @@ class Sitemap
      * Set cache options.
      *
      * @param string              $key
-     * @param Carbon|Datetime|int $duration
+     * @param Carbon|DateTime|int $duration
      * @param bool                $useCache
      */
-    public function setCache($key = null, $duration = null, $useCache = true)
+    public function setCache($key = null, $duration = null, $useCache = true): void
     {
         $this->model->setUseCache($useCache);
 
@@ -153,14 +130,9 @@ class Sitemap
 
     /**
      * Add new sitemap one or multiple items to $items array.
-     *
-     * @param array $params
-     *
-     * @return void
      */
-    public function addItem($params = [])
+    public function addItem(array $params = []): void
     {
-
         // if is multidimensional
         if (array_key_exists(1, $params)) {
             foreach ($params as $a) {
@@ -212,7 +184,7 @@ class Sitemap
             $loc = htmlentities($loc, ENT_XML1);
 
             if ($title != null) {
-                htmlentities($title, ENT_XML1);
+                $title = htmlentities($title, ENT_XML1);
             }
 
             if ($images) {
@@ -261,7 +233,7 @@ class Sitemap
         $googlenews['language'] = isset($googlenews['language']) ? $googlenews['language'] : 'en';
         $googlenews['publication_date'] = isset($googlenews['publication_date']) ? $googlenews['publication_date'] : date('Y-m-d H:i:s');
 
-        $this->model->setItems([
+        $this->model->addItem([
             'loc'          => $loc,
             'lastmod'      => $lastmod,
             'priority'     => $priority,
@@ -285,7 +257,7 @@ class Sitemap
      */
     public function addSitemap($loc, $lastmod = null)
     {
-        $this->model->setSitemaps([
+        $this->model->addSitemap([
             'loc'     => $loc,
             'lastmod' => $lastmod,
         ]);
@@ -309,7 +281,6 @@ class Sitemap
      *
      * @param string $format (options: xml, html, txt, ror-rss, ror-rdf, google-news)
      * @param string $style  (path to custom xls style like '/styles/xsl/xml-sitemap.xsl')
-     *
      * @return View
      */
     public function render($format = 'xml', $style = null)
@@ -484,7 +455,7 @@ class Sitemap
             $file = $path.DIRECTORY_SEPARATOR.$filename.'.'.$fe;
         }
 
-        if (true == $this->model->getUseGzip()) {
+        if ($this->model->getUseGzip()) {
             // write file (gzip compressed)
             $this->file->put($file, gzencode($data['content'], 9));
         } else {

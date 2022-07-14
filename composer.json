@@ -30,8 +30,12 @@
     },
     "autoload": {
         "psr-0": {
-            "Laravelium\\Sitemap": "src/",
-            "Laravelium\\Tests": "tests/"
+            "Laravelium\\Sitemap": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Laravelium\\Sitemap\\Tests\\": "tests/"
         }
     },
     "extra": {

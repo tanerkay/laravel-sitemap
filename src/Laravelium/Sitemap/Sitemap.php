@@ -15,12 +15,12 @@ namespace Laravelium\Sitemap;
  */
 
 use DateTime;
-use Illuminate\Contracts\View\View;
 use Illuminate\Filesystem\Filesystem as Filesystem;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactory;
+use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 
 class Sitemap
@@ -281,7 +281,7 @@ class Sitemap
      *
      * @param string $format (options: xml, html, txt, ror-rss, ror-rdf, google-news)
      * @param string $style  (path to custom xls style like '/styles/xsl/xml-sitemap.xsl')
-     * @return View
+     * @return Response
      */
     public function render($format = 'xml', $style = null)
     {

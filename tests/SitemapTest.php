@@ -1,6 +1,6 @@
 <?php
 
-namespace Laravelium\Tests;
+namespace Laravelium\Sitemap\Tests;
 
 use Laravelium\Sitemap\Sitemap;
 use Orchestra\Testbench\TestCase;
